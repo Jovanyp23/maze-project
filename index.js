@@ -49,7 +49,7 @@ const shuffle = arr => {
 
 const grid= Array(cells).fill(null).map(() => Array(cells).fill(false));
 
-const verticles = Array(cells).fill(null).map(() => Array(cells-1).fill(false));
+const verticals = Array(cells).fill(null).map(() => Array(cells-1).fill(false));
 const horizontals = Array(cells-1).fill(null).map(() => Array(cells).fill(false)); 
 
 const startRow = Math.floor(Math.random()*cells);
@@ -67,9 +67,9 @@ const stepThroughCell = (row, column) => {
     //Assemble randomly-ordered list of neighbors
     const neighbors = shuffle([
         [row-1, column, 'up'],
-        [row+1, column,'right'],
-        [row, column-1,'down'],
-        [row, column+1,'left']
+        [row, column+1,'right'],
+        [row+1, column,'down'],
+        [row, column-1,'left']
     ]);
 
     
@@ -80,7 +80,7 @@ const stepThroughCell = (row, column) => {
         const [nextRow, nextColumn, direction] = neighbor; 
 
     //See if that neighbor is out of bounds
-        if (nextRow > 0 || nextRow >= cells || nextcolumn <0 || nextColumn <=cells){
+        if (nextRow < 0 || nextRow >= cells || nextColumn <0 || nextColumn >=cells){
             continue; 
         }
     //If we have visited that neighbor, continue to next neighbor
@@ -89,13 +89,33 @@ const stepThroughCell = (row, column) => {
         }
 
     // Remove wall
-        
+     if (direction === 'left'){
+        verticals[row][column - 1] = true;
+     } else if (direction === 'right'){
+        verticals[row][column] = true;
+    } else if (direction === 'up'){
+      horizontals[row-1][column] = true;
+    } else if (direction === 'down'){
+      horizontals[row][column] = true;
     }
+
+    stepThroughCell(nextRow, nextColumn);
+    }
+    
     //Visit that next cell 
 
 };
 
-stepThroughCell(1, 1);
+stepThroughCell(startRow, startColumn);
 
+horizontals.forEach(row => {
+    row.forEach((open) => {
+        if (open){
+            return;
+        }
+
+        const wall = Bodies.rectangle();
+    });
+});
 
 
