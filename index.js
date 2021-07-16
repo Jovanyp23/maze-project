@@ -3,8 +3,8 @@ const { Engine, Render, Runner, World, Bodies, Body, Events} = Matter;
 
 const width= window.innerWidth;
 const height=window.innerHeight;
-const cellsVertical = 10;
-const cellsHorizontal=10; 
+const cellsVertical = 6;
+const cellsHorizontal=6; 
 
 
 
@@ -129,7 +129,10 @@ horizontals.forEach((row, rowIndex) => {
             5,
             {
                 isStatic:true,
-                label: "wall"
+                label: "wall",
+                render: {
+                    fillStyle: 'teal'
+                }
             }
         );
         World.add(world, wall);
@@ -149,7 +152,10 @@ verticals.forEach((row, rowIndex) => {
             unitLengthY,
             {
                 isStatic:true,
-                label: "wall"
+                label: "wall",
+                render: {
+                    fillStyle: 'teal'
+                }
             }
         );
         World.add(world,wall);
@@ -164,7 +170,10 @@ const goal = Bodies.rectangle(
     unitLengthY * .4,
     {
         isStatic: true,
-        label: 'goal'
+        label: 'goal',
+        render: {
+            fillStyle: 'yellow'
+        }
     }
 );
 World.add(world, goal);
@@ -175,7 +184,11 @@ const ball = Bodies.circle(
     unitLengthX / 2,
     unitLengthY /2,
     ballRadius,
-    { label: 'ball'}
+    { label: 'ball',
+        render: {
+            fillStyle: 'white'
+        }
+    }
 );
 World.add(world,ball);
 document.addEventListener('keydown', event => {
@@ -210,6 +223,7 @@ Events.on(engine, 'collisionStart', event => {
         if (labels.includes(collision.bodyA.label) &&
             labels.includes(collision.bodyB.label)
             ){
+                document.querySelector('.winner').classList.remove('hidden');
                 world.gravity.y = 1;
                 world.bodies.forEach(body => {
                     if (body.label === 'wall') {
